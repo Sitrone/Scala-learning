@@ -1,1 +1,3 @@
-# scala-learning
+# scala-learning 
+
+something about scala
