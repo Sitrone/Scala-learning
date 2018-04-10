@@ -1,8 +1,6 @@
 package com.sununiq.github.basic.alf
 
-import java.awt.event.{ActionEvent, ActionListener}
-
-import javax.swing.JButton
+import java.util.concurrent.Executors
 
 /**
   * Scala：隐式类型，可以对现有的类库进行扩展，缺点，代码可读性降低，debug难度增加
@@ -10,17 +8,6 @@ import javax.swing.JButton
   */
 class ImplictFeature {
 
-  implicit def makeAction(action: (ActionEvent) => Unit) = {
-    new ActionListener {
-      override def actionPerformed(e: ActionEvent): Unit = action(e)
-    }
-  }
-
-  var counter = 0
-  val button = new JButton("Increment")
-  button.addActionListener((event: ActionEvent) => counter + 1)
-  //  button.addActionListener { (_: ActionEvent) => counter + 1 }
-  //  button.addActionListener { _ => counter + 1 }
 }
 
 object ControlFlow {
@@ -61,6 +48,9 @@ object ControlFlow {
   }
 
   def main(args: Array[String]): Unit = {
+
+    val service = Executors.newSingleThreadExecutor()
+    service.execute { () => println("") } // SAM转换
 
   }
 }
