@@ -3,8 +3,6 @@ package com.sununiq.github.basic.tool
 import java.lang.reflect.{InvocationHandler, Method, Proxy}
 import java.util.Properties
 
-import scala.collection.immutable.Range
-
 class PropertiesProxy {
   private var properties: Properties = _
 
@@ -18,33 +16,42 @@ class PropertiesProxy {
   private def camel2dot(methodName: String): String = {
     val builder = new StringBuilder(methodName.length)
     methodName.foreach { c =>
-      if (c.isUpper)
+      if (c.isUpper) {
         builder.append('.')
+      }
       builder.append(c.toLower)
     }
     builder.toString()
   }
 
   def to[T](clazz: Class[T]): T = {
-    Proxy.newProxyInstance(clazz.getClassLoader, Array(clazz), new InvocationHandler {
-      override def invoke(proxy: scala.Any, method: Method, args: Array[AnyRef]): AnyRef = {
-        val methodName = camel2dot(processMethodName(method.getName))
-        val originValue: String = properties.get(methodName).toString
-        if (method.getReturnType == Int.getClass) {
-          originValue.toInt
-        }
-        println(method.getReturnType)
-        originValue
-        //        method.getReturnType.isInstanceOf match {
-        //          case Int.getClass => originValue.toInt
-        //          case Long.getClass => originValue.toLong
-        ////          case _: Class[Boolean] => originValue.toBoolean
-        ////          case _: Class[String] => originValue
-        ////          case _: Class[Double] => originValue.toDouble
-        //        }
-      }
-    }).asInstanceOf[T]
+    val value: AnyRef = Proxy.newProxyInstance(clazz.getClassLoader, Array(clazz), new ProxyInvocationHandler())
+    value.asInstanceOf[T]
   }
+
+  //TODO 还是有问题
+  class ProxyInvocationHandler extends InvocationHandler {
+    def invoke(proxy: Object, method: Method, args: Array[Object]): Object = {
+      val methodName = camel2dot(processMethodName(method.getName))
+      val originValue: String = properties.get(methodName).toString
+      if (method.getReturnType == java.lang.Integer.TYPE) {
+        originValue
+      }else if (method.getReturnType == java.lang.Boolean.TYPE) {
+        originValue
+      } else{
+        throw new IllegalArgumentException()
+      }
+//      type[method.getReturnType]
+//      method.getReturnType match {
+//        case Int.getClass => originValue.toInt
+//        case _: Class[Long] => originValue.toLong
+//        case _: Class[Boolean] => originValue.toBoolean
+//        case _: Class[String] => originValue
+//        case _: Class[Double] => originValue.toDouble
+//      }
+    }
+  }
+
 }
 
 object PropertiesProxy {

@@ -53,5 +53,6 @@ object TestImplicit extends App {
   //  button.addActionListener { _ => counter + 1 }
 
   import MyRichInt._
+
   println(120 +% 10)
 }

@@ -7,7 +7,7 @@ import java.nio.file.{FileVisitResult, Files, Path, SimpleFileVisitor}
 object HelloWorld extends App {
   println("Hello Scala.")
 
-  implicit def makeFileVisitor(f: (Path) => Unit): SimpleFileVisitor[Path] {
+  implicit def makeFileVisitor(f: Path => Unit): SimpleFileVisitor[Path] {
     def visitFile(file: Path, attrs: BasicFileAttributes): FileVisitResult
   } = new SimpleFileVisitor[Path] {
     override def visitFile(file: Path, attrs: BasicFileAttributes): FileVisitResult = {

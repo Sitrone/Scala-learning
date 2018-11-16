@@ -57,7 +57,7 @@ object P01 {
   */
 object P02 {
 
-  def lastButOne0[T](list: List[T]): T = list.takeRight(0).head
+  def lastButOne0[T](list: List[T]): T = list.takeRight(2).head
 
   @tailrec
   def lastButOne[T](list: List[T]): T = list match {
